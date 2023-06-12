@@ -1,0 +1,16 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+
+entity result is port(
+    x, bonus_reg: in std_logic_vector(3 downto 0);
+    sel: in std_logic_vector(1 downto 0);
+    result: out std_logic_vector(7 downto 0);
+);
+end result;
+
+architecture resultado of result is
+
+    result <= L*32 + 4((B/2) + (X/4)); -- como arredondar??
+
+end resultado;

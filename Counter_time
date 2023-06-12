@@ -1,0 +1,35 @@
+library ieee;
+use ieee.std_logic_1164.all; 
+
+entity Counter_time is port(
+
+    R1, E3, CLK_1Hz: in  std_logic;
+    end_time: out std_logic;
+    tempo: out std_logic_vector(3 downto 0));
+
+end Counter_time;
+
+architecture counter of Counter_round is
+
+    signal cont: std_logic_vector(3 downto 0);
+
+    cont <= "1111"
+
+    begin
+        process(R1, E3, CLK_1Hz)
+        begin
+            if (CLK_1Hz'event and CLK_1Hz = '1') then
+                if (cont > '0000' and E3 = '1') then
+                    cont <= cont - "0001"
+                end if;
+            end if;
+        
+            if(R1 = '1') then
+                cont <= "1111"
+            end if;
+        end process;
+
+    end_time <= '1' when cont = "0000" else '0';
+    tempo <= cont
+
+end counter;
