@@ -41,6 +41,7 @@ signal erro: std_logic;
 signal E23, E25, E12: std_logic;
 
 --signals implícitos--
+signal t, C, L: std_logic_vector(6 downto 0);
 
 --dec termometrico
 signal stermoround, stermobonus, andtermo: std_logic_vector(15 downto 0);
@@ -261,6 +262,93 @@ end component;
 -- COMECO DO CODIGO ---------------------------------------------------------------------------------------
 
 begin	
+
+ct: counter_time port map(R1, E3, CLK_1Hz, end_time, tempo);
+cr: counter_round port map(R2, E4, Clock_50, end_round, x);
+dt1: decoder_termometrico port map(bonus_reg, stermobonus);
+dt2: decoder_termometrico port map(x, stermoround);
+clock_de2: fsm_clock_de2 port map(R1, E2orE3, Clock_50, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
+clock_emu: fsm_clock_emu port map(R1, E2orE3, Clock_50, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
+
+E2orE3 <= E2 or E3;
+
+decod74: decod7seg port map(result(7 downto 4), sdec7);
+decod30: decod7seg port map(result(3 downto 0), sdec6);
+decodtempo: decod7seg port map(tempo, sdec4);
+decod00sel32: decod7seg port map(edec2, sdec2);
+decod00sel10: decod7seg port map(edec0, sdec0);
+
+edec2 <= "00" & SEL(3 downto 2);
+edec0 <= "00" & SEL(1 downto 0);
+
+d_code31: d_code port map(code(31 downto 28), sdecod7);
+d_code27: d_code port map(code(27 downto 24), sdecod6);
+d_code23: d_code port map(code(23 downto 20), sdecod5);
+d_code19: d_code port map(code(19 downto 16), sdecod4);
+d_code15: d_code port map(code(15 downto 12), sdecod3);
+d_code11: d_code port map(code(11 downto 8), sdecod2);
+d_code7: d_code port map(code(7 downto 4), sdecod1);
+d_code3: d_code port map(code(3 downto 0), sdecod0);
+
+--- mux 2 bits
+mux2_7: mux2x1_7bits port map(sdecod7, sdec7, E5, smuxhex7);
+mux2_6: mux2x1_7bits port map(sdecod6, sdec6, E5, smuxhex6);
+mux2_5: mux2x1_7bits port map(sdecod5, t, E3, smuxhex5);
+mux2_4: mux2x1_7bits port map(sdecod4, sdec4, E3, smuxhex4);
+mux2_3: mux2x1_7bits port map(sdecod3, C, E1, smuxhex3);
+mux2_2: mux2x1_7bits port map(sdecod2, sdec2, E1, smuxhex2);
+mux2_1: mux2x1_7bits port map(sdecod1, L, E1, smuxhex1);
+mux2_0: mux2x1_7bits port map(sdecod0, sdec0, E1, smuxhex0);
+
+--- mux 2x1 16 bits
+mux2_16: mux2x1_16bits port map(stermobonus, andtermo, sw(17), mux2_16out);
+andtermo <= stermoround and not(E1);
+
+mux4_1: mux4x1_1bit port map(CLK_025Hz, CLK_025Hz, CLK_033Hz, CLK_050Hz, SEL(1 downto 0), end_fpga);
+
+--- mux 15 bits
+mux4_15_aux: mux4x1_15bits port map(srom0a, srom1a, srom2a, srom3a, SEL(3 downto 2), code_aux);
+
+--- mux 32 bits
+mux4_32_code: mux4x1_32bits port map(srom0, srom1, srom2, srom3, SEL(3 downto 2), code);
+--- registradores
+reg_sel: registrador_sel port map(R2, E1, CLOCK_50, SW(3 downto 0), sel);
+reg_user: registrador_user port map(R2, E3, CLOCK_50, SW(14 downto 0), user);
+reg_bonus: registrador_bonus port map(R2, E4, CLOCK_50, bonus, bonus_reg);
+
+erro: comp_erro port map(code_aux, user, erro);
+c_end: comp_end port map(bonus_reg, end_game);
+
+sub: subtracao port map(bonus_reg, erro, bonus);
+
+logic: logica port map(x, bonus_reg, sel(1 downto 0), result);
+
+aROM0: ROM0 port map(x, srom0); 
+aROM1: ROM1 port map(x, srom1);
+aROM2: ROM2 port map(x, srom2);
+aROM3: ROM3 port map(x, srom3);
+
+aROM0a: ROM0a port map(x, srom0a);
+aROM1a: ROM1a port map(x, srom1a);
+aROM2a: ROM2a port map(x, srom2a);
+aROM3a: ROM3a port map(x, srom3a);
+
+E23 <= not(E2 or E3);
+E25 <= not(E2 or E5);
+E12 <= not(E1 or E2);
+
+hex7 <= E25 or smuxhex7;
+hex6 <= E25 or smuxhex6;
+hex5 <= E23 or smuxhex5;
+hex4 <= E23 or smuxhex4;
+hex3 <= E12 or smuxhex3;
+hex2 <= E12 or smuxhex2;
+hex1 <= E12 or smuxhex1;
+hex0 <= E12 or smuxhex0;
+
+t <= "1110000";
+c <= "0110001";
+l <= "1110110";
 
 --Conexoes e atribuicoes a partir daqui. Dica: usar os mesmos nomes e I/O ja declarados nos components. Todos os signals necessarios ja estao declarados.
 
