@@ -20,34 +20,25 @@ signal clock: std_logic;
 
 component datapath is
 port(
-	-- Entradas de dados
+
 	clk: in std_logic;
 	SW: in std_logic_vector(17 downto 0);
-	
-	-- Entradas de controle
 	R1, R2, E1, E2, E3, E4, E5: in std_logic;
-	
-	-- Saídas de dados
 	hex0, hex1, hex2, hex3, hex4, hex5, hex6, hex7: out std_logic_vector(6 downto 0);
 	ledr: out std_logic_vector(15 downto 0);
-	
-	-- Saídas de status
 	end_game, end_time, end_round, end_FPGA: out std_logic
 );
 end component;
 
-component controle is
-port(
--- Entradas de controle
+component controle is port(
+
 	enter, reset, CLOCK: in std_logic;
--- Entradas de status
 	end_game, end_time, end_round, end_FPGA: in std_logic;
--- Saídas de comandos
-	R1, R2, E1, E2, E3, E4, E5: out std_logic
-);
+	R1, R2, E1, E2, E3, E4, E5: out std_logic);
+
 end component;
 
-component ButtonSync is port( --saida ja negada
+component ButtonSync is port(
 
     KEY1, KEY0, CLK: in  std_logic;
     BTN1, BTN0   : out std_logic);
@@ -55,5 +46,9 @@ component ButtonSync is port( --saida ja negada
 end component;
 
 begin
+
+	dp: datapath port map(CLOCK_50, SW(17 downto 0), R1, R2, E1, E2, E3, E4, E5, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, LEDR, end_game, end_time, end_round, end_FPGA);
+	ctrl: controle port map(BTN1, BTN0, CLOCK_50, end_game, end_time, end_round, end_FPGA, R1, R2, E1, E2, E3, E4, E5);
+	btn: ButtonSync port map(KEY(1), KEY(0), BTN1, BTN0);
 
 end circuito;
