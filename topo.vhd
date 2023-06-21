@@ -48,9 +48,8 @@ component ButtonSync is port(
 end component;
 
 begin
-
-	dp: datapath port map(CLOCK_50, SW(17 downto 0), R1, R2, E1, E2, E3, E4, E5, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, LEDR, end_game, end_time, end_round, end_FPGA);
-	ctrl: controle port map(BTN1, BTN0, end_game, end_time, end_round, end_FPGA, R1, R2, E1, E2, E3, E4, E5);
-	btn: ButtonSync port map(KEY(1), KEY(0), BTN1, BTN0);
+	ctrl: controle port map(BTN1, BTN0, clock_50, end_game, end_time, end_round, end_FPGA, R1, R2, E1, E2, E3, E4, E5);
+	dp: datapath port map(CLOCK_50, SW, R1, R2, E1, E2, E3, E4, E5, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, LEDR, end_game, end_time, end_round, end_FPGA);
+	btn: ButtonSync port map(KEY(1), KEY(0), clock_50, BTN1, BTN0);
 
 end circuito;
