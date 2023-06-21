@@ -11,9 +11,9 @@ architecture registrador of registrador_user is
 begin 
 	process(CLK, switch, R)
 	begin
-		if (R = '0') then user <= "000000000000000";
+		if (R = '1') then user <= "000000000000000";
 		elsif (CLK'event and CLK = '1') then
-			if (R = '0') then user <= switch;
+			if (R = '1') then user <= switch;
 			end if;
 		end if;
 	end process;

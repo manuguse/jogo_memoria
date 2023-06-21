@@ -11,9 +11,9 @@ architecture registrador of registrador_sel is
 begin 
 	process(CLK, D, R)
 	begin
-		if (R = '0') then H <= "0000";
+		if (R = '1') then H <= "0000";
 		elsif (CLK'event and CLK = '1') then
-			if (E = '0') then H <= D;
+			if (E = '1') then H <= D;
 			end if;
 		end if;
 	end process;

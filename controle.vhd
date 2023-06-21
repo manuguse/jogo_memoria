@@ -17,7 +17,7 @@ architecture bhv of controle is
         p1: process(CLOCK, reset)
         begin
             if reset = '1' then
-                EA <= init;
+                PE <= init;
             elsif (clock'event and clock = '1') then
                 EA <= PE;
             end if;
