@@ -17,7 +17,6 @@ signal BTN1_next, BTN0_next: STATES := EsperaApertar;
 
 begin
 
-
 	process (clk) 
 	begin
 		if clk'event and clk = '1' then

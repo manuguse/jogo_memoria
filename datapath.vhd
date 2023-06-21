@@ -1,4 +1,5 @@
 library IEEE;
+use IEEE.std_logic_signed.all;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 
@@ -17,6 +18,7 @@ port(
 	
 	-- Saídas de status
 	end_game, end_time, end_round, end_FPGA: out std_logic
+
 );
 end entity;
 
@@ -49,6 +51,7 @@ signal stermoround, stermobonus, andtermo: std_logic_vector(15 downto 0);
 signal sdecod7, sdec7, sdecod6, sdec6, sdecod5, sdecod4, sdec4, sdecod3, sdecod2, sdec2, sdecod1, sdecod0, sdec0: std_logic_vector(6 downto 0);
 signal smuxhex7, smuxhex6, smuxhex5, smuxhex4, smuxhex3, smuxhex2, smuxhex1, smuxhex0: std_logic_vector(6 downto 0);
 signal edec2, edec0: std_logic_vector(3 downto 0);
+signal mux2_16out: std_logic_vector(15 downto 0);
 --saida ROMs
 signal srom0, srom1, srom2, srom3: std_logic_vector(31 downto 0);
 signal srom0a, srom1a, srom2a, srom3a: std_logic_vector(14 downto 0);
@@ -111,65 +114,65 @@ end component;
 
 component mux2x1_7bits is
 port(
-	E0, E1: in std_logic_vector(6 downto 0);
+	F1,F2: in std_logic_vector(6 downto 0);
 	sel: in std_logic;
-	saida: out std_logic_vector(6 downto 0)
+	F: out std_logic_vector(6 downto 0)
 );
 end component;
 
 component mux2x1_16bits is
 port(
-	E0, E1: in std_logic_vector(15 downto 0);
+	F1,F2: in std_logic_vector(15 downto 0);
 	sel: in std_logic;
-	saida: out std_logic_vector(15 downto 0)
+	F: out std_logic_vector(15 downto 0)
 );
 end component;
 
 component mux4x1_1bit is
 port(
-	E0, E1, E2, E3: in std_logic;
+	F1,F2,F3,F4: in std_logic;
 	sel: in std_logic_vector(1 downto 0);
-	saida: out std_logic
+	F: out std_logic
 );
 end component;
 
 component mux4x1_15bits is
 port(
-	E0, E1, E2, E3: in std_logic_vector(14 downto 0);
+	F1,F2,F3,F4: in std_logic_vector(14 downto 0);
 	sel: in std_logic_vector(1 downto 0);
-	saida: out std_logic_vector(14 downto 0)
+	F: out std_logic_vector(14 downto 0)
 );
 end component;
 
 component mux4x1_32bits is
 port(
-	E0, E1, E2, E3: in std_logic_vector(31 downto 0);
+	F1,F2,F3,F4: in std_logic_vector(31 downto 0);
 	sel: in std_logic_vector(1 downto 0);
-	saida: out std_logic_vector(31 downto 0)
+	F: out std_logic_vector(31 downto 0)
 );
 end component;
 
 component registrador_sel is 
 port(
-	R, E, clock: in std_logic;
-	D: in std_logic_vector(3 downto 0);
-	Q: out std_logic_vector(3 downto 0) 
+	D: in std_logic_vector(3 downto 0);  
+	R, E, CLK: in std_logic;
+	H: out std_logic_vector(3 downto 0)
 );
 end component;
 
 component registrador_user is 
 port(
-	R, E, clock: in std_logic;
-	D: in std_logic_vector(14 downto 0);
-	Q: out std_logic_vector(14 downto 0) 
+	switch: in std_logic_vector(14 downto 0);  
+	R, E, CLK: in std_logic;
+	user: out std_logic_vector(14 downto 0)
 );
 end component;
 
 component registrador_bonus is 
 port(
-	S, E, clock: in std_logic;
-	D: in std_logic_vector(3 downto 0);
-	Q: out std_logic_vector(3 downto 0) 
+	D: in std_logic_vector(3 downto 0);  
+	R, E, CLK: in std_logic;
+	H: out std_logic_vector(3 downto 0)
 );
 end component;
 
@@ -197,9 +200,9 @@ end component;
 
 component logica is 
 port(
-	round, bonus: in std_logic_vector(3 downto 0);
-	nivel: in std_logic_vector(1 downto 0);
-	points: out std_logic_vector(7 downto 0)
+	x, bonus_reg: in std_logic_vector(3 downto 0);
+    sel: in std_logic_vector(1 downto 0);
+    result: out std_logic_vector(7 downto 0)
 );
 end component;
 
@@ -263,12 +266,12 @@ end component;
 
 begin	
 
-ct: counter_time port map(R1, E3, CLK_1Hz, end_time, tempo);
-cr: counter_round port map(R2, E4, Clock_50, end_round, x);
+ct: counter_time port map(R1, E3, CLK_1Hz, tempo, end_time);
+cr: counter_round port map(R2, E4, clk, x, end_round);
 dt1: decoder_termometrico port map(bonus_reg, stermobonus);
 dt2: decoder_termometrico port map(x, stermoround);
-clock_de2: fsm_clock_de2 port map(R1, E2orE3, Clock_50, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
-clock_emu: fsm_clock_emu port map(R1, E2orE3, Clock_50, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
+clock_de2: fsm_clock_de2 port map(R1, E2orE3, clk, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
+clock_emu: fsm_clock_emu port map(R1, E2orE3, clk, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
 
 E2orE3 <= E2 or E3;
 
@@ -301,10 +304,10 @@ mux2_1: mux2x1_7bits port map(sdecod1, L, E1, smuxhex1);
 mux2_0: mux2x1_7bits port map(sdecod0, sdec0, E1, smuxhex0);
 
 --- mux 2x1 16 bits
-mux2_16: mux2x1_16bits port map(stermobonus, andtermo, sw(17), mux2_16out);
-andtermo <= stermoround and not(E1);
+mux2_16: mux2x1_16bits port map(andtermo, stermobonus, sw(17), mux2_16out);
+andtermo <= stermoround and not ("000000000000000"&E1);
 
-mux4_1: mux4x1_1bit port map(CLK_025Hz, CLK_025Hz, CLK_033Hz, CLK_050Hz, SEL(1 downto 0), end_fpga);
+mux4_1: mux4x1_1bit port map(CLK_1Hz, CLK_025Hz, CLK_033Hz, CLK_050Hz, SEL(1 downto 0), end_fpga);
 
 --- mux 15 bits
 mux4_15_aux: mux4x1_15bits port map(srom0a, srom1a, srom2a, srom3a, SEL(3 downto 2), code_aux);
@@ -312,11 +315,11 @@ mux4_15_aux: mux4x1_15bits port map(srom0a, srom1a, srom2a, srom3a, SEL(3 downto
 --- mux 32 bits
 mux4_32_code: mux4x1_32bits port map(srom0, srom1, srom2, srom3, SEL(3 downto 2), code);
 --- registradores
-reg_sel: registrador_sel port map(R2, E1, CLOCK_50, SW(3 downto 0), sel);
-reg_user: registrador_user port map(R2, E3, CLOCK_50, SW(14 downto 0), user);
-reg_bonus: registrador_bonus port map(R2, E4, CLOCK_50, bonus, bonus_reg);
+reg_sel: registrador_sel port map(SW(3 downto 0), R2, E1, clk, sel);
+reg_user: registrador_user port map(SW(14 downto 0), R2, E3, clk, user);
+reg_bonus: registrador_bonus port map(bonus, R2, E4, clk, bonus_reg);
 
-erro: comp_erro port map(code_aux, user, erro);
+erros: comp_erro port map(code_aux, user, erro);
 c_end: comp_end port map(bonus_reg, end_game);
 
 sub: subtracao port map(bonus_reg, erro, bonus);
@@ -337,14 +340,14 @@ E23 <= not(E2 or E3);
 E25 <= not(E2 or E5);
 E12 <= not(E1 or E2);
 
-hex7 <= E25 or smuxhex7;
-hex6 <= E25 or smuxhex6;
-hex5 <= E23 or smuxhex5;
-hex4 <= E23 or smuxhex4;
-hex3 <= E12 or smuxhex3;
-hex2 <= E12 or smuxhex2;
-hex1 <= E12 or smuxhex1;
-hex0 <= E12 or smuxhex0;
+hex7 <= "000000"&E25 or smuxhex7;
+hex6 <= "000000"&E25 or smuxhex6;
+hex5 <= "000000"&E23 or smuxhex5;
+hex4 <= "000000"&E23 or smuxhex4;
+hex3 <= "000000"&E12 or smuxhex3;
+hex2 <= "000000"&E12 or smuxhex2;
+hex1 <= "000000"&E12 or smuxhex1;
+hex0 <= "000000"&E12 or smuxhex0;
 
 t <= "1110000";
 c <= "0110001";
