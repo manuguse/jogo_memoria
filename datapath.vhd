@@ -90,13 +90,13 @@ port(
 );
 end component;
 
-component FSM_clock_emu is
-port(
-	reset, E: in std_logic;
-	clock: in std_logic;
-	CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz: out std_logic
-);
-end component;
+--component FSM_clock_emu is
+--port(
+	--reset, E: in std_logic;
+	--clock: in std_logic;
+	--CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz: out std_logic
+--);
+--end component;
 
 component decod7seg is
 port(
@@ -271,7 +271,7 @@ cr: counter_round port map(R2, E4, clk, x, end_round);
 dt1: decoder_termometrico port map(bonus_reg, stermobonus);
 dt2: decoder_termometrico port map(x, stermoround);
 clock_de2: fsm_clock_de2 port map(R1, E2orE3, clk, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
-clock_emu: fsm_clock_emu port map(R1, E2orE3, clk, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
+--clock_emu: fsm_clock_emu port map(R1, E2orE3, clk, CLK_1Hz, CLK_050Hz, CLK_033Hz, CLK_025Hz, CLK_020Hz);
 
 E2orE3 <= E2 or E3;
 
@@ -305,7 +305,7 @@ mux2_0: mux2x1_7bits port map(sdecod0, sdec0, E1, smuxhex0);
 
 --- mux 2x1 16 bits
 mux2_16: mux2x1_16bits port map(andtermo, stermobonus, sw(17), mux2_16out);
-andtermo <= stermoround and not ("000000000000000"&E1);
+andtermo <= stermoround and not (E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1);
 
 mux4_1: mux4x1_1bit port map(CLK_1Hz, CLK_025Hz, CLK_033Hz, CLK_050Hz, SEL(1 downto 0), end_fpga);
 
@@ -340,14 +340,14 @@ E23 <= not(E2 or E3);
 E25 <= not(E2 or E5);
 E12 <= not(E1 or E2);
 
-hex7 <= "000000"&E25 or smuxhex7;
-hex6 <= "000000"&E25 or smuxhex6;
-hex5 <= "000000"&E23 or smuxhex5;
-hex4 <= "000000"&E23 or smuxhex4;
-hex3 <= "000000"&E12 or smuxhex3;
-hex2 <= "000000"&E12 or smuxhex2;
-hex1 <= "000000"&E12 or smuxhex1;
-hex0 <= "000000"&E12 or smuxhex0;
+hex7 <= E25&E25&E25&E25&E25&E25&E25 or smuxhex7;
+hex6 <= E25&E25&E25&E25&E25&E25&E25 or smuxhex6;
+hex5 <= E23&E23&E23&E23&E23&E23&E23 or smuxhex5;
+hex4 <= E23&E23&E23&E23&E23&E23&E23 or smuxhex4;
+hex3 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex3;
+hex2 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex2;
+hex1 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex1;
+hex0 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex0;
 
 t <= "1110000";
 c <= "0110001";
