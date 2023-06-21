@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity controle is port(
-    enter, reset, CLOCK: in std_logic;
+   enter, reset, CLOCK: in std_logic;
 	end_game, end_time, end_round, end_FPGA: in std_logic;
 	R1, R2, E1, E2, E3, E4, E5: out std_logic
-);
+	);
 end controle;
 
 architecture bhv of controle is
@@ -23,7 +23,7 @@ architecture bhv of controle is
             end if;
         end process;
 
-        p2: process(EA, PE)
+        p2: process(EA, PE, end_game, end_time, end_round, end_FPGA, enter)
         begin
             case EA is
 
@@ -73,13 +73,14 @@ architecture bhv of controle is
                 E3 <= '1';
                 E4 <= '0';
                 E5 <= '0';
-                if end_time = '1' then
+                if end_time = '1'  then
                     PE <= result;
-                elsif enter = '1' then
+					 else
+                if enter = '1' then
                     PE <= count_round;
-                else 
-                    PE <= play_user;
-                end if;
+                else	PE <= play_user;
+					 end if;
+					end if;
             
             when count_round =>
                 R1 <= '1';
@@ -92,9 +93,7 @@ architecture bhv of controle is
                 PE <= check;
 
             when check =>
-                if end_round = '1' then
-                    PE <= result;
-                elsif end_game = '1' then
+                if (end_round = '1' or end_game = '1') then
                     PE <= result;
                 else
                     PE <= waitt;
