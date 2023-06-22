@@ -29,7 +29,7 @@ architecture bhv of controle is
             case EA is
 				
             when init =>
-                PE <= setup;
+             
                 E1 <= '0';
                 E2 <= '0';
                 E3 <= '0';
@@ -37,6 +37,7 @@ architecture bhv of controle is
                 E5 <= '0';
                 R1 <= '1';
                 R2 <= '1';
+					 PE <= setup;
 
             when setup =>
                 R1 <= '0';
@@ -94,6 +95,13 @@ architecture bhv of controle is
                 PE <= check;
 
             when check =>
+				    R1 <= '0';
+                R2 <= '0';
+                E1 <= '0';
+                E2 <= '0';
+                E3 <= '0';
+                E4 <= '0';
+                E5 <= '0';
                 if (end_round = '1' or end_game = '1') then
                     PE <= result;
                 else
