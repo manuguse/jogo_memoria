@@ -11,9 +11,9 @@ entity logica is port(
 end logica;
 
 architecture resultado of logica is
-
-    begin
-
-    result <= sel&"00000" + ('0'&bonus_reg(2 downto 0))&"000" + ("00"&x(3 downto 2));
-    
+	 signal k: std_logic_vector(8 downto 0);
+	 
+	 begin
+    k <= sel&"00000" + ('0'&bonus_reg(2 downto 0))&"00" + ("00"&x(3 downto 2));
+    result <= k(7 downto 0);
 end resultado;

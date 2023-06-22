@@ -304,10 +304,10 @@ mux2_1: mux2x1_7bits port map(sdecod1, L, E1, smuxhex1);
 mux2_0: mux2x1_7bits port map(sdecod0, sdec0, E1, smuxhex0);
 
 --- mux 2x1 16 bits
-mux2_16: mux2x1_16bits port map(andtermo, stermobonus, sw(17), mux2_16out);
-andtermo <= stermoround and not (E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1);
+mux2_16: mux2x1_16bits port map(andtermo, stermobonus, SW(17), mux2_16out);
+andtermo <= stermoround and (not (E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1&E1));
 
-mux4_1: mux4x1_1bit port map(CLK_1Hz, CLK_025Hz, CLK_033Hz, CLK_050Hz, SEL(1 downto 0), end_fpga);
+mux4_1: mux4x1_1bit port map(CLK_025Hz, CLK_033Hz, CLK_050Hz, CLk_1Hz, SEL(1 downto 0), end_fpga);
 
 --- mux 15 bits
 mux4_15_aux: mux4x1_15bits port map(srom0a, srom1a, srom2a, srom3a, SEL(3 downto 2), code_aux);
@@ -349,9 +349,11 @@ hex2 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex2;
 hex1 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex1;
 hex0 <= E12&E12&E12&E12&E12&E12&E12 or smuxhex0;
 
-t <= "1110000";
-c <= "0110001";
-l <= "1110110";
+ledr <= mux2_16out;
+
+t <= "0000111"; -- deixei trocado com c
+c <= "1000110"; -- deixei trocado com t
+l <= "1000111";
 
 --Conexoes e atribuicoes a partir daqui. Dica: usar os mesmos nomes e I/O ja declarados nos components. Todos os signals necessarios ja estao declarados.
 
