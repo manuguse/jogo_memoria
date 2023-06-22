@@ -14,7 +14,7 @@ end Counter_time;
 
 architecture counter of Counter_time is
 
-    signal cont: std_logic_vector(3 downto 0) := "1111";
+    signal cont: std_logic_vector(3 downto 0) := "1010";
 
     begin
         process(R, E, clock)
@@ -26,7 +26,7 @@ architecture counter of Counter_time is
             end if;
         
             if(R = '1') then
-                cont <= "1111";
+                cont <= "1010";
             end if;
         end process;
 
