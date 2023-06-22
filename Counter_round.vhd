@@ -1,6 +1,5 @@
 library ieee;
-use ieee.std_logic_1164.all; 
-use ieee.numeric_std.all;
+use ieee.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 
 entity Counter_round is port(
@@ -22,7 +21,7 @@ architecture cr of counter_round is
 						tc <= '0';
                 elsif (clock'event and clock = '1') then
 						if E = '1' then
-						 cont <= cont + "0001";
+						 cont <= cont + 1;
                     if cont = "1111" then
 							cont <= "1111";
 							tc <= '1';

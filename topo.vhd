@@ -26,8 +26,7 @@ port(
 	R1, R2, E1, E2, E3, E4, E5: in std_logic;
 	hex0, hex1, hex2, hex3, hex4, hex5, hex6, hex7: out std_logic_vector(6 downto 0);
 	ledr: out std_logic_vector(15 downto 0);
-	end_game, end_time, end_round, end_FPGA: out std_logic;
-	error: out std_logic
+	end_game, end_time, end_round, end_FPGA: out std_logic
 
 );
 end component;
@@ -50,7 +49,7 @@ end component;
 
 begin
 	ctrl: controle port map(BTN1, BTN0, clock_50, end_game, end_time, end_round, end_FPGA, R1, R2, E1, E2, E3, E4, E5);
-	dp: datapath port map(CLOCK_50, SW, R1, R2, E1, E2, E3, E4, E5, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, LEDR(15 downto 0), end_game, end_time, end_round, end_FPGA, LEDR(17));
+	dp: datapath port map(CLOCK_50, SW, R1, R2, E1, E2, E3, E4, E5, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, LEDR(15 downto 0), end_game, end_time, end_round, end_FPGA);
 	btn: ButtonSync port map(KEY(1), KEY(0), clock_50, BTN1, BTN0);
 
 end circuito;

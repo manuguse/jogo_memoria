@@ -17,8 +17,7 @@ port(
 	ledr: out std_logic_vector(15 downto 0);
 	
 	-- Saídas de status
-	end_game, end_time, end_round, end_FPGA: out std_logic;
-	error: out std_logic
+	end_game, end_time, end_round, end_FPGA: out std_logic
 );
 
 end entity;
@@ -322,7 +321,6 @@ reg_bonus: registrador_bonus port map(bonus, R2, E4, clk, bonus_reg);
 
 erros: comp_erro port map(code_aux, user, erro);
 c_end: comp_end port map(bonus_reg, end_game);
-error <= erro;
 
 sub: subtracao port map(bonus_reg, erro, bonus);
 
