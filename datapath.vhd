@@ -17,9 +17,10 @@ port(
 	ledr: out std_logic_vector(15 downto 0);
 	
 	-- Saídas de status
-	end_game, end_time, end_round, end_FPGA: out std_logic
-
+	end_game, end_time, end_round, end_FPGA: out std_logic;
+	error: out std_logic
 );
+
 end entity;
 
 architecture arc of datapath is
