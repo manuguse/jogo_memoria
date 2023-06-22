@@ -7,14 +7,16 @@ entity comp_erro is port (
 );
 end comp_erro;
 
-architecture comp_erro of comp_erro is
+architecture erro of comp_erro is
 begin 
-    process(E0, E1)
-    begin
-    if E0 = E1 then
-        diferente <= '0';
-    else
-        diferente <= '1';
-    end if;
-    end process;
-end comp_erro;
+
+diferente <= '0' when (E0 xor E1) = "000000000000000" else '1';
+--    process(E0, E1)
+--    begin
+--    if E0 = E1 then
+--        diferente <= '0';
+--    else
+--        diferente <= '1';
+--    end if;
+--    end process;
+end erro;

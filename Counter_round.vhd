@@ -12,23 +12,25 @@ tc: out std_logic);
 end Counter_round;
 
 architecture cr of counter_round is
-    signal cont: std_logic_vector(3 downto 0) := "0000";
+    signal cont: std_logic_vector(3 downto 0);
 
         begin
             process(R, E, clock)
             begin
-                if (clock'event and clock = '1') then
-                    if (cont < "1111" and E = '1') then
-                        cont <= cont + "0001";
+				if(R = '1') then
+                  cont <= "0000";
+						tc <= '0';
+                elsif (clock'event and clock = '1') then
+						if E = '1' then
+						 cont <= cont + "0001";
+                    if cont = "1111" then
+							cont <= "1111";
+							tc <= '1';
+                    else 
+							tc<= '0';
                     end if;
                 end if;
-            
-                if(R = '1') then
-                    cont <= "0000";
-                end if;
+				end if;    
             end process;
-    
-        tc <= '1' when cont = "1111" else '0';
-
         Q <= cont;
 end cr;

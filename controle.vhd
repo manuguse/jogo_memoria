@@ -16,19 +16,20 @@ architecture bhv of controle is
 
         p1: process(CLOCK, reset)
 		  begin
-            if (clock'event and clock = '1') then
+		  		if reset = '1' then 
+					EA <= init;
+				elsif (clock'event and clock = '1') then
                 EA <= PE;
             end if;
         end process;
 
-        p2: process(EA, PE, end_game, end_time, end_round, end_FPGA, enter, reset)
+        p2: process(EA, PE, end_game, end_time, end_round, end_FPGA, enter)
         begin
-				if reset = '1' then PE <= init;
-				else
+
 		  
             case EA is
 				
-            when init =>
+            when init => 
              
                 E1 <= '0';
                 E2 <= '0';
@@ -85,7 +86,7 @@ architecture bhv of controle is
 					end if;
             
             when count_round =>
-                R1 <= '1';
+                R1 <= '0';
                 R2 <= '0';
                 E1 <= '0';
                 E2 <= '0';
@@ -109,7 +110,7 @@ architecture bhv of controle is
                 end if;
 
             when waitt =>
-                R1 <= '0';
+                R1 <= '1';
                 R2 <= '0';
                 E1 <= '0';
                 E2 <= '0';
@@ -136,6 +137,5 @@ architecture bhv of controle is
                     PE <= result;
                 end if;
             end case;
-				end if;
         end process;
     end bhv;
