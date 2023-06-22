@@ -10,8 +10,9 @@ entity subtracao is port(
 end subtracao;
 
 architecture subtracao of subtracao is
-
+	signal e1_4bits: std_logic_vector(3 downto 0);
     begin
-        resultado <= E0 - E1;
+		e1_4bits <= e1&e1&e1&e1;
+        resultado <= E0 + e1_4bits;
 
 end subtracao;
